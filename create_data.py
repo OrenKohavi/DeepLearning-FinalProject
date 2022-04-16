@@ -14,6 +14,7 @@ train_test_split = 0.2 #20% of data reserved for testing
 jpeg_compression_amount = 50 #Number between 1 and 95, with higher being less compressed
 tile_size = 8
 expected_dim = (768,512)
+output_image_previews = False #Creates a preview_inputs and preview_labels directory to see inputs/labels in image format
 
 #Paths within the dest_filepath for different parts of the data
 lossless_images_path = "/raw_images"
@@ -66,6 +67,17 @@ def main(source_filepath : str, dest_filepath : str):
     np.save(dest_filepath + "/train_labels", train_labels)
     np.save(dest_filepath + "/test_inputs", test_inputs)
     np.save(dest_filepath + "/test_labels", test_labels)
+
+    #if output_image_previews is True, save the first 1000 inputs/labels as png
+    if output_image_previews:
+        if not os.path.isdir(dest_filepath + "/preview_labels"):
+            os.mkdir(dest_filepath + "/preview_labels")
+        if not os.path.isdir(dest_filepath + "/preview_inputs"):
+            os.mkdir(dest_filepath + "/preview_inputs")
+        for idx, img in enumerate(labels[:1000]):
+            img.save(dest_filepath + "/preview_labels/" + f"{idx}".zfill(3) + ".png")
+        for idx, img in enumerate(inputs[:1000]):
+            img.save(dest_filepath + "/preview_inputs/" + f"{idx}".zfill(3) + ".png")
     
 def make_tiles(images : list, step_size : int, make_inputs : bool) -> list:
     output_size = step_size*3 if make_inputs else step_size
