@@ -11,7 +11,7 @@ import numpy as np
 train_test_split = 0.2 #20% of data reserved for testing
 #It's much easier to include borders, so it's hardcoded to True for now.
 #include_border_blocks = True #if True, will include the edges of the images, padding with 0
-jpeg_compression_amount = 50 #Number between 1 and 95, with higher being less compressed
+jpeg_compression_amount = 25 #Number between 1 and 95, with higher being less compressed
 tile_size = 8
 expected_dim = (768,512)
 output_image_previews = False #Creates a preview_inputs and preview_labels directory to see inputs/labels in image format
@@ -37,6 +37,7 @@ def main(source_filepath : str, dest_filepath : str):
     img_width, img_height = expected_dim
     assert img_width % tile_size == 0, "Image width not divisible by tile size"
     assert img_height % tile_size == 0, "Image height not divisible by tile size"
+    print(f"Reading {len(compressed_images)} images...")
     #Create 3x3 tile-sized inputs
     inputs = make_tiles(compressed_images,step_size=tile_size, make_inputs=True)
     labels = make_tiles(lossless_images, step_size=tile_size, make_inputs=False)
