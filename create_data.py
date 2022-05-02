@@ -48,11 +48,11 @@ def main(source_filepath : str, dest_filepath : str):
         numpy_inputs.append(np.array(img))
     for img in labels:
         numpy_labels.append(np.array(img))
-    #Shuffle labels/data together
-    temp = list(zip(numpy_inputs, numpy_labels))
-    random.shuffle(temp)
-    ni, nl = zip(*temp)
-    numpy_inputs, numpy_labels = list(ni), list(nl)
+    #Shuffle labels/data together -- THIS STEP HAS BEEN REMOVED FOR NOW
+    # temp = list(zip(numpy_inputs, numpy_labels))
+    # random.shuffle(temp)
+    # ni, nl = zip(*temp)
+    # numpy_inputs, numpy_labels = list(ni), list(nl)
     numpy_inputs = np.array(numpy_inputs)
     numpy_labels = np.array(numpy_labels)
     #Perfect! We now have numpy arrays of images and labels!
@@ -63,6 +63,12 @@ def main(source_filepath : str, dest_filepath : str):
     test_labels = numpy_labels[:train_test_split_index]
     train_inputs = numpy_inputs[train_test_split_index:]
     train_labels = numpy_labels[train_test_split_index:]
+    #Convert numpy arrays to float32 type
+    train_inputs = np.divide(train_inputs, 255.0)
+    test_inputs = np.divide(test_inputs, 255.0)
+    train_labels = np.divide(train_labels, 255.0)
+    test_labels = np.divide(test_labels, 255.0)
+    #save to .npy files
     np.save(dest_filepath + "/train_inputs", train_inputs)
     np.save(dest_filepath + "/train_labels", train_labels)
     np.save(dest_filepath + "/test_inputs", test_inputs)
