@@ -14,10 +14,15 @@ def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_pat
     verbose_img_output = False #Enabling this will also output inputs and labels to the outputs folder
     
     #Load the data
-    train_inputs = np.load(train_inputs_path)
-    train_labels = np.load(train_labels_path)
-    test_inputs = np.load(test_inputs_path)
-    test_labels = np.load(test_labels_path)
+    try:
+        train_inputs = np.load(train_inputs_path)
+        train_labels = np.load(train_labels_path)
+        test_inputs = np.load(test_inputs_path)
+        test_labels = np.load(test_labels_path)
+    except FileNotFoundError:
+        print("Error: Inputs/Labels could not be found")
+        print("Ensure that you have succesfully run 'create_data.py'")
+        return
 
     #Shuffle the training data
     temp = list(zip(train_inputs, train_labels))
