@@ -15,6 +15,7 @@ jpeg_compression_amount = 25 #Number between 1 and 95, with higher being less co
 tile_size = 8
 expected_dim = (768,512)
 output_image_previews = False #Creates a preview_inputs and preview_labels directory to see inputs/labels in image format
+num_image_previews = 1000 #If output_image_previews is True, how many previews to make
 
 #Paths within the dest_filepath for different parts of the data
 lossless_images_path = "/raw_images"
@@ -41,6 +42,7 @@ def main(source_filepath : str, dest_filepath : str):
     #Create 3x3 tile-sized inputs
     inputs = make_tiles(compressed_images,step_size=tile_size, make_inputs=True)
     labels = make_tiles(lossless_images, step_size=tile_size, make_inputs=False)
+    assert len(inputs) == len(labels), "Number of inputs and labels do not match!"
     #print(f"Generated {len(inputs)} inputs and {len(labels)} labels")
     #Convert it all to a numpy array
     numpy_inputs = []
@@ -75,16 +77,17 @@ def main(source_filepath : str, dest_filepath : str):
     np.save(dest_filepath + "/test_inputs", test_inputs)
     np.save(dest_filepath + "/test_labels", test_labels)
 
-    #if output_image_previews is True, save the first 1000 inputs/labels as png
+    #if output_image_previews is True, save inputs/labels as png
     if output_image_previews:
         if not os.path.isdir(dest_filepath + "/preview_labels"):
             os.mkdir(dest_filepath + "/preview_labels")
         if not os.path.isdir(dest_filepath + "/preview_inputs"):
             os.mkdir(dest_filepath + "/preview_inputs")
-        for idx, img in enumerate(labels[:1000]):
-            img.save(dest_filepath + "/preview_labels/" + f"{idx}".zfill(3) + ".png")
-        for idx, img in enumerate(inputs[:1000]):
-            img.save(dest_filepath + "/preview_inputs/" + f"{idx}".zfill(3) + ".png")
+        num_digits = len(str(num_image_previews - 1))
+        for idx, img in enumerate(labels[:num_image_previews]):
+            img.save(dest_filepath + "/preview_labels/" + f"{idx}".zfill(num_digits) + ".png")
+        for idx, img in enumerate(inputs[:num_image_previews]):
+            img.save(dest_filepath + "/preview_inputs/" + f"{idx}".zfill(num_digits) + ".png")
     
 def make_tiles(images : list, step_size : int, make_inputs : bool) -> list:
     output_size = step_size*3 if make_inputs else step_size
