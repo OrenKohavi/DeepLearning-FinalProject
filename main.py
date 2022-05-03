@@ -8,7 +8,7 @@ from PIL import Image #install using 'pip install Pillow'
 from network import BlockCNN
 
 def main(train_inputs, train_labels, test_inputs, test_labels, num_epochs, batch_size):
-    create_img_output = False
+    create_img_output = True
     #^ Set to True if you want to see the images in the output folder
     #^ Currently, image reconstruction is super broken, so this is disabled
     
@@ -68,23 +68,31 @@ def main(train_inputs, train_labels, test_inputs, test_labels, num_epochs, batch
         output_img.save("./output/nn_output.png")
         print("Done! 🥳🎉")
 
-def np_to_img(np_array, output_shape, crop_center=False):
+def np_to_img(np_array, output_shape, crop_center=False, step=8):
     #Converts a np array to PIL image
     #crop_center should be true when the np_array should be cropped to the tile size (hardcoded to 8x8)
     if crop_center:
-        new_np_array = np.zeros(shape=(6144,8,8,3)) #Hardcoded for 8x8 tiles and 768x512 image
+        num_tiles = (output_shape[0]*output_shape[1]) // (step*step)
+        new_np_array = np.zeros(shape=(num_tiles,step,step,3)) #Hardcoded for 3 channels
         for i in range(len(np_array)):
-            new_np_array[i] = np_array[i][8:16, 8:16, :]
+            new_np_array[i] = np_array[i][step:2*step, step:2*step, :]
         np_array = new_np_array
-    np_array = np.reshape(np_array, output_shape)
-    #Multiply by 255 to convert type back to uint8
-    np_array = np_array * 255
-    np_array = np_array.astype(np.uint8)
-    return Image.fromarray(np.transpose(np_array, axes=(1,0,2)))
+    img_width = output_shape[0]
+    img_height = output_shape[1]
+    img_array = np.zeros(shape=output_shape)
+    for w in range(0, img_width, step):
+        for h in range(0, img_height, step):
+            this_tile = np_array[(w//step)*(img_height//step) + (h//step)]
+            this_tile = np.transpose(this_tile, axes=(1,0,2))
+            img_array[w:w+step, h:h+step, :] = this_tile
+    img_array = img_array * 255
+    img_array = img_array.astype(np.uint8)
+    img_array = np.transpose(img_array, axes=(1,0,2))
+    return Image.fromarray(img_array)
 
 
 if __name__ == "__main__":
     data_path = "./data/"
-    num_epochs = 1
-    batch_size = 512
+    num_epochs = 10
+    batch_size = 128
     main(data_path+"train_inputs.npy", data_path+"train_labels.npy", data_path+"test_inputs.npy", data_path+"test_labels.npy", num_epochs, batch_size)
