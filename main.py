@@ -89,7 +89,7 @@ def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_pat
                 pil_label.save(f"./output/{i}_label.png")
         #Create images of the output after running it through the model
         for i in range(len(images)):
-            model_prediction = model.predict(images[i])
+            model_prediction = model.predict_on_batch(images[i])
             pil_prediction = np_to_img(model_prediction, image_output_shape)
             pil_prediction.save(f"./output/{i}_prediction.png")
     print("Done! 🥳🎉")
