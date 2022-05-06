@@ -51,11 +51,6 @@ def main(source_filepath : str, dest_filepath : str):
         numpy_inputs.append(np.array(img))
     for img in labels:
         numpy_labels.append(np.array(img))
-    #Shuffle labels/data together -- THIS STEP HAS BEEN REMOVED FOR NOW
-    # temp = list(zip(numpy_inputs, numpy_labels))
-    # random.shuffle(temp)
-    # ni, nl = zip(*temp)
-    # numpy_inputs, numpy_labels = list(ni), list(nl)
     numpy_inputs = np.array(numpy_inputs)
     numpy_labels = np.array(numpy_labels)
     #Perfect! We now have numpy arrays of images and labels!
@@ -114,19 +109,23 @@ def get_images(filepath : str, ext : str) -> list:
     for img in filenames:
         images.append(Image.open(filepath + "/" + img))
     #Sanity-check that the image dimentions are right
+    new_images = []
     for img in images:
         if img.size == expected_dim:
             #Good! This is the correct resolution
-            pass
+            print("Found image with correct resolution")
+            new_images.append(img)
         elif img.size == (expected_dim[1],expected_dim[0]):
+            print("Found image with incorrect rotation, but correct dimensions")
             #Also fine, just rotate the image 90 degrees so that it fits with the rest
             img = img.rotate(90, expand=True)
             #Now, it should be the right size
             assert img.size == expected_dim
+            new_images.append(img)
         else:
             #This is a weird size, raise an error!
             raise ValueError(f"Images have bad size! Expected {expected_dim} but got {img.size}")
-    return images
+    return new_images
 
 if __name__ == "__main__":
     if not os.path.isdir("./Kodak_Full_Images"):
