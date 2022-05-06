@@ -59,6 +59,7 @@ def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_pat
     print(f"Building model and training for {num_epochs} epochs")
     model = BlockCNN() #Create our model
     model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01), loss=model.loss)
+    model.build(input_shape=(None,24,24,3))
     model.fit(shuffled_train_inputs, shuffled_train_labels, epochs=num_epochs, batch_size=batch_size)
     print("Training complete")
     #Now, run the model on the test data
