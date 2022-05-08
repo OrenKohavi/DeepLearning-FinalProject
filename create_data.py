@@ -113,10 +113,10 @@ def get_images(filepath : str, ext : str) -> list:
     for img in images:
         if img.size == expected_dim:
             #Good! This is the correct resolution
-            print("Found image with correct resolution")
+            #print("Found image with correct resolution")
             new_images.append(img)
         elif img.size == (expected_dim[1],expected_dim[0]):
-            print("Found image with incorrect rotation, but correct dimensions")
+            #print("Found image with incorrect rotation, but correct dimensions")
             #Also fine, just rotate the image 90 degrees so that it fits with the rest
             img = img.rotate(90, expand=True)
             #Now, it should be the right size
