@@ -9,22 +9,11 @@ from network import BlockCNN
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Suppress TensorFlow warnings
 
-def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_path, num_epochs, batch_size):
+def main(train_inputs, train_labels, test_inputs, test_labels, num_epochs, batch_size):
     print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
     create_img_output = True #Enabling this will output the results of the network to the outputs folder
     verbose_img_output = False #Enabling this will also output inputs and labels to the outputs folder
-    
-    #Load the data
-    #input is 24x24, label is uncompressed center tile 8x8
-    try:
-        train_inputs = np.load(train_inputs_path)
-        train_labels = np.load(train_labels_path)
-        test_inputs = np.load(test_inputs_path)
-        test_labels = np.load(test_labels_path)
-    except FileNotFoundError:
-        print("Error: Inputs/Labels could not be found")
-        print("Ensure that you have succesfully run 'create_data.py'")
-        return
+    save_weights = False
 
     #Shuffle the training data
     temp = list(zip(train_inputs, train_labels))
@@ -60,13 +49,16 @@ def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_pat
 
     print(f"Building model and training for {num_epochs} epochs")
     model = BlockCNN() #Create our model
-    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01), loss=model.loss)
+    model.compile(optimizer=tf.keras.optimizers.Adam(learning_rate=0.01), loss=tf.keras.losses.mse)
     model.build(input_shape=(None,24,24,3))
     model.fit(shuffled_train_inputs, shuffled_train_labels, epochs=num_epochs, batch_size=batch_size)
     print("Training complete")
     #Now, run the model on the test data
     loss = model.evaluate(shuffled_test_inputs, shuffled_test_labels)
     print(f"Model loss: {loss}")
+
+    if save_weights:
+        model.save(f"./model_{num_epochs}_epochs")
 
     if create_img_output:
         print("Creating Image Output... This may take a few seconds")
@@ -92,7 +84,13 @@ def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_pat
                 pil_label.save(f"./output/{i}_label.png")
         #Create images of the output after running it through the model
         for i in range(len(images)):
-            model_prediction = model.predict_on_batch(images[i])
+            #To prevent memory overflow issues, split images[i] into batch_size chunks
+            batched_img = np.array_split(images[i], images[i].shape[0]//batch_size)
+            completed_batches = []
+            for batch in batched_img:
+                batch_prediction = model.predict_on_batch(batch)
+                completed_batches.append(batch_prediction)
+            model_prediction = np.concatenate(completed_batches)
             pil_prediction = np_to_img(model_prediction, image_output_shape)
             pil_prediction.save(f"./output/{i}_prediction.png")
     print("Done! 🥳🎉")
@@ -123,6 +121,17 @@ def np_to_img(np_array, output_shape, crop_center=False, step=8):
 
 if __name__ == "__main__":
     data_path = "./data/"
-    num_epochs = 1
+    num_epochs = 2
     batch_size = 128
-    main(data_path+"train_inputs.npy", data_path+"train_labels.npy", data_path+"test_inputs.npy", data_path+"test_labels.npy", num_epochs, batch_size)
+    #Load the data
+    #input is 24x24, label is uncompressed center tile 8x8
+    try:
+        train_inputs = np.load(data_path+"train_inputs.npy")
+        train_labels = np.load(data_path+"train_labels.npy")
+        test_inputs = np.load(data_path+"test_inputs.npy")
+        test_labels = np.load(data_path+"test_labels.npy")
+    except FileNotFoundError as e:
+        print("Error: Inputs/Labels could not be found")
+        print("Ensure that you have succesfully run 'create_data.py'")
+        raise(e)
+    main(train_inputs, train_labels, test_inputs, test_labels, num_epochs, batch_size)

@@ -2,6 +2,8 @@
 data/
 #The output folder
 output/
+#Any saved models
+*epochs
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
