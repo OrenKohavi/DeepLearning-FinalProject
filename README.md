@@ -29,7 +29,7 @@ Deblocking is best seen in images with curves, such as this portion, containing 
 <label for="parrot_compressed">Compressed Image</label>
 
 
-<img id="parrot_deblocked" src="readme_images\Parrot_Deblocked.jpeg" alt="Zoomed-In image of the deblocked parrot's beak" width="400"/>
+<img id="parrot_deblocked" src="readme_images\Parrot_Deblocked.png" alt="Zoomed-In image of the deblocked parrot's beak" width="400"/>
 
 <label for="parrot_deblocked">Deblocked Image</label>
 
