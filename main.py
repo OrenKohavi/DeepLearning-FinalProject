@@ -10,10 +10,12 @@ from network import BlockCNN
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2' #Suppress TensorFlow warnings
 
 def main(train_inputs_path, train_labels_path, test_inputs_path, test_labels_path, num_epochs, batch_size):
+    print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
     create_img_output = True #Enabling this will output the results of the network to the outputs folder
     verbose_img_output = False #Enabling this will also output inputs and labels to the outputs folder
     
     #Load the data
+    #input is 24x24, label is uncompressed center tile 8x8
     try:
         train_inputs = np.load(train_inputs_path)
         train_labels = np.load(train_labels_path)
@@ -121,6 +123,6 @@ def np_to_img(np_array, output_shape, crop_center=False, step=8):
 
 if __name__ == "__main__":
     data_path = "./data/"
-    num_epochs = 10
+    num_epochs = 1
     batch_size = 128
     main(data_path+"train_inputs.npy", data_path+"train_labels.npy", data_path+"test_inputs.npy", data_path+"test_labels.npy", num_epochs, batch_size)
