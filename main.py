@@ -121,7 +121,7 @@ def np_to_img(np_array, output_shape, crop_center=False, step=8):
 
 if __name__ == "__main__":
     data_path = "./data/"
-    num_epochs = 2
+    num_epochs = 10
     batch_size = 128
     #Load the data
     #input is 24x24, label is uncompressed center tile 8x8
