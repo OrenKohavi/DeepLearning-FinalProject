@@ -13,22 +13,25 @@ This is an image from the testing portion of the dataset, meaning the network wa
 
 Zooming in on fine details or contrast changes, it's clear that the output from the network is far superior to the blocky jpeg.
 
-<img id="zoomed_sail_compressed" src="readme_images\Sailboat_Compressed_Sail.jpeg" alt="Zoomed-In image of the compressed sailboat's sail" width="350"/>
+<img id="zoomed_sail_compressed" src="readme_images\Sailboat_Compressed_Sail.jpeg" alt="Zoomed-In image of the compressed sailboat's sail" width="400"/>
 
 <label for="zoomed_sail_compressed">Compressed Image</label>
 
 
-<img id="zoomed_sail_deblocked" src="readme_images\Sailboat_Deblocked_Sail.png" alt="Zoomed-In image of the deblocked sailboat's sail" width="350"/>
+<img id="zoomed_sail_deblocked" src="readme_images\Sailboat_Deblocked_Sail.png" alt="Zoomed-In image of the deblocked sailboat's sail" width="400"/>
 
 <label for="zoomed_sail_deblocked">Deblocked Image</label>
 
-<br>
+Deblocking is best seen in images with curves, such as this portion, containing a parrot's beak:
 
-<img id="zoomed_face_compressed" src="readme_images\Sailboat_Compressed_Face.jpeg" alt="Zoomed-In image of the compressed sailboat's occupants" width="350"/>
-<label for="zoomed_face_compressed">Compressed Image</label>
+<img id="parrot_compressed" src="readme_images\Parrot_Compressed.jpeg" alt="Zoomed-In image of the compressed parrot's beak" width="400"/>
 
-<img id="zoomed_face_deblocked" src="readme_images\Sailboat_Deblocked_Face.png" alt="Zoomed-In image of the deblocked sailboat's occupants" width="350"/>
-<label for="zoomed_face_deblocked">Deblocked Image</label>
+<label for="parrot_compressed">Compressed Image</label>
+
+
+<img id="parrot_deblocked" src="readme_images\Parrot_Deblocked.jpeg" alt="Zoomed-In image of the deblocked parrot's beak" width="400"/>
+
+<label for="parrot_deblocked">Deblocked Image</label>
 
 # How to run:
 
