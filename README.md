@@ -24,7 +24,7 @@ Zooming in on fine details or contrast changes, it's clear that the output from 
 
 Deblocking is best seen in images with curves, such as this portion, containing a parrot's beak:
 
-<img id="parrot_compressed" src="readme_images\Parrot_Compressed.jpeg" alt="Zoomed-In image of the compressed parrot's beak" width="400"/>
+<img id="parrot_compressed" src="readme_images\Parrot_Compressed.png" alt="Zoomed-In image of the compressed parrot's beak" width="400"/>
 
 <label for="parrot_compressed">Compressed Image</label>
 
